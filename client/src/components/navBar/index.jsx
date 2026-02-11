@@ -39,7 +39,7 @@ export default function NavBar() {
 
             {/* Icons Section */}
             <div className="hidden md:flex items-center gap-6">
-                <Avatar alt="User" />
+                <Link to='/profile'><Avatar alt="User" /></Link>
 
                 <Badge badgeContent={2} color="secondary">
                     <FavoriteIcon className="cursor-pointer hover:scale-110 transition duration-300" />

@@ -4,6 +4,11 @@ import Home from "./pages/Home";
 import NavBar from "./components/NavBar";
 import Drawer from "./pages/Drawer";
 import Contact from "./pages/Contact";
+import Profile from "./pages/Profile";
+import EditProfile from "./pages/Profile/EditProfile";
+import ChangePassword from "./pages/Profile/account/ChangePassword";
+import ManageAddress from "./pages/Profile/account/ManageAddress";
+import PaymentMethods from "./pages/Profile/account/PaymentMethods";
 
 function App() {
   return (
@@ -15,6 +20,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/drawer" element={<Drawer />} />
           <Route path="/contact" element={<Contact />} />
+
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/edit" element={<EditProfile />} />
+          <Route path="/profile/change-password" element={<ChangePassword />} />
+          <Route path="/profile/address" element={<ManageAddress />} />
+          <Route path="/profile/payment" element={<PaymentMethods />} />
         </Routes>
       </div>
 
