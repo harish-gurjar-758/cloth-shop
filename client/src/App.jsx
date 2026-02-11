@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 // import Welcome from "./pages/Welcome"
 import NavBar from "./components/NavBar";
 import Drawer from "./pages/Drawer";
+import Contact from "./pages/Contact";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/drawer" element={<Drawer />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>
 
