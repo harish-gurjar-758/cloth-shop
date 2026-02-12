@@ -10,6 +10,7 @@ import ChangePassword from "./pages/Profile/account/ChangePassword";
 import ManageAddress from "./pages/Profile/account/ManageAddress";
 import PaymentMethods from "./pages/Profile/account/PaymentMethods";
 import Wishlist from "./pages/Wishlist";
+import Orders from "./pages/Orders";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/drawer" element={<Drawer />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/orders" element={<Orders />} />
 
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/edit" element={<EditProfile />} />

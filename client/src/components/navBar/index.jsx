@@ -50,7 +50,11 @@ export default function NavBar() {
                     <FavoriteIcon className="cursor-pointer hover:scale-110 transition duration-300" />
                 </Badge>
 
-                <Badge badgeContent={5} color="secondary">
+                <Badge
+                    badgeContent={5}
+                    color="secondary"
+                    onClick={() => navigate('/orders')}
+                >
                     <LocalGroceryStoreIcon className="cursor-pointer hover:scale-110 transition duration-300" />
                 </Badge>
             </div>
