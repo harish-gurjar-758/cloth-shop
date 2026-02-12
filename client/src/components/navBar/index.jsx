@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -9,6 +9,7 @@ import Badge from "@mui/material/Badge";
 
 export default function NavBar() {
     const [mobileMenu, setMobileMenu] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <nav className="h-[75px] w-full bg-white/80 backdrop-blur-md fixed top-0 flex items-center justify-between px-6 md:px-12 border-b z-50 shadow-sm">
@@ -41,7 +42,11 @@ export default function NavBar() {
             <div className="hidden md:flex items-center gap-6">
                 <Link to='/profile'><Avatar alt="User" /></Link>
 
-                <Badge badgeContent={2} color="secondary">
+                <Badge
+                    badgeContent={2}
+                    color="secondary"
+                    onClick={() => navigate('/wishlist')}
+                >
                     <FavoriteIcon className="cursor-pointer hover:scale-110 transition duration-300" />
                 </Badge>
 
