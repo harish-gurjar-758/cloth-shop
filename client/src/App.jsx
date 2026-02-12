@@ -12,6 +12,7 @@ import PaymentMethods from "./pages/Profile/account/PaymentMethods";
 import Wishlist from "./pages/Wishlist";
 import Orders from "./pages/Orders";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import Auth from "./pages/Auth";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/auth" element={<Auth />} />
 
           <Route
             path="/profile"

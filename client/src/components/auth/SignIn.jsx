@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
     TextField,
     Button,
@@ -7,9 +7,11 @@ import {
     Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function SignIn({ switchMode }) {
     const navigate = useNavigate();
+    const { setUser } = useContext(AuthContext);
 
     const [form, setForm] = useState({
         email: "",
@@ -26,33 +28,24 @@ export default function SignIn({ switchMode }) {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Basic Validation
-        if (!form.email || !form.password) {
-            return setAlert({
-                open: true,
-                message: "All fields are required!",
-                severity: "error",
-            });
-        }
+        try {
+            const { data } = await loginUser(form);
+            setUser(data);
 
-        // FAKE LOGIN LOGIC (Replace with API)
-        if (form.email === "admin@gmail.com" && form.password === "123456") {
             setAlert({
                 open: true,
                 message: "Login Successful 🎉",
                 severity: "success",
             });
 
-            setTimeout(() => {
-                navigate("/profile"); // REDIRECT AFTER LOGIN
-            }, 1500);
-        } else {
+            setTimeout(() => navigate("/profile"), 1000);
+        } catch (error) {
             setAlert({
                 open: true,
-                message: "Invalid Credentials!",
+                message: error.response?.data?.message || "Login Failed",
                 severity: "error",
             });
         }
