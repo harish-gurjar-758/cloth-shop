@@ -11,6 +11,7 @@ import ManageAddress from "./pages/Profile/account/ManageAddress";
 import PaymentMethods from "./pages/Profile/account/PaymentMethods";
 import Wishlist from "./pages/Wishlist";
 import Orders from "./pages/Orders";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
@@ -25,7 +26,14 @@ function App() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/orders" element={<Orders />} />
 
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/profile/change-password" element={<ChangePassword />} />
           <Route path="/profile/address" element={<ManageAddress />} />
