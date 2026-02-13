@@ -1,5 +1,6 @@
-import AdminLayout from "../../../../admin/src/components/AdminLayout";
-import StatCard from "../../../../admin/src/components/StatCard";
+import AdminLayout from "../components/AdminLayout";
+import StatCard from "../components/StatCard";
+
 
 export default function Dashboard() {
     return (

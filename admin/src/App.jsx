@@ -1,20 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
-// Layout
-import AdminLayout from "./components/AdminLayout";
-
-// Route Protection
-import AdminRoute from "./components/AdminRoute";
-
-// Pages
 import Dashboard from "./pages/Dashboard";
-import Products from "./pages/Products";
-import Orders from "./pages/Orders";
-import Users from "./pages/Users";
+import AdminProducts from "./pages/Products";
+import AdminOrders from "./pages/Orders";
+import AdminUsers from "./pages/Users";
 import Analytics from "./pages/Analytics";
-import Settings from "./pages/Settings";
-import AdminLogin from "./pages/AdminLogin";
+import AdminSettings from "./pages/Settings";
+import AdminLayout from "./components/AdminLayout";
+import AdminRoute from "./components/AdminRoute";
+import AdminLogin from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+
 
 function App() {
   return (
@@ -36,11 +31,11 @@ function App() {
           {/* Nested Routes */}
           <Route index element={<Navigate to="/dashboard" />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="products" element={<Products />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="users" element={<Users />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="users" element={<AdminUsers />} />
           <Route path="analytics" element={<Analytics />} />
-          <Route path="settings" element={<Settings />} />
+          <Route path="settings" element={<AdminSettings />} />
         </Route>
 
         {/* ================= 404 ================= */}

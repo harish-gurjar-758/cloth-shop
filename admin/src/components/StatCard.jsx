@@ -17,7 +17,7 @@ export default function StatCard({
       className="rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100"
     >
       <CardContent className="flex items-center justify-between p-6">
-        
+
         {/* LEFT CONTENT */}
         <div>
           {loading ? (
@@ -44,9 +44,8 @@ export default function StatCard({
                 )}
 
                 <span
-                  className={`text-sm font-medium ${
-                    isIncrease ? "text-green-500" : "text-red-500"
-                  }`}
+                  className={`text-sm font-medium ${isIncrease ? "text-green-500" : "text-red-500"
+                    }`}
                 >
                   {change}%
                 </span>

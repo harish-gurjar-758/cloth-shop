@@ -1,4 +1,5 @@
-import AdminLayout from "../../../../admin/src/components/AdminLayout";
+import AdminLayout from "../components/AdminLayout";
+
 
 export default function Analytics() {
     return (

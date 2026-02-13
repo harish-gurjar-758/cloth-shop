@@ -1,5 +1,6 @@
-import AdminLayout from "../../../../admin/src/components/AdminLayout";
-import ProductTable from "../../../../admin/src/components/ProductTable";
+import AdminLayout from "../components/AdminLayout";
+import ProductTable from "../components/ProductTable";
+
 
 export default function AdminProducts() {
     return (

@@ -1,5 +1,6 @@
-import AdminLayout from "../../../../admin/src/components/AdminLayout";
-import OrderTable from "../../../../admin/src/components/OrderTable";
+import AdminLayout from "../components/AdminLayout";
+import OrderTable from "../components/OrderTable";
+
 
 export default function AdminOrders() {
     return (
