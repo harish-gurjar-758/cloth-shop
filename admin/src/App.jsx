@@ -8,7 +8,6 @@ import Analytics from "./pages/Analytics";
 import AdminSettings from "./pages/Settings";
 import AdminLayout from "./components/AdminLayout";
 import AdminRoute from "./components/AdminRoute";
-import PublicRoute from "./components/PublicRoute";
 import AdminLogin from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -21,9 +20,7 @@ function App() {
         <Route
           path="/login"
           element={
-            <PublicRoute>
-              <AdminLogin />
-            </PublicRoute>
+            <AdminLogin />
           }
         />
 
