@@ -1,16 +1,33 @@
 import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import Loader from "./Loader";
 
 export default function AdminRoute({ children }) {
-    const { user, loading } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
+  const location = useLocation();
 
-    if (loading) return <Loader />;
+  // 🔄 Show loader while checking auth
+  if (loading) {
+    return <Loader />;
+  }
 
-    if (!user || user.role !== "admin") {
-        return <Navigate to="/" />;
-    }
+  // ❌ Not logged in
+  if (!user) {
+    return (
+      <Navigate
+        to="/login"
+        state={{ from: location }}
+        replace
+      />
+    );
+  }
 
-    return children;
+  // ❌ Not admin
+  if (user?.role !== "admin") {
+    return <Navigate to="/login" replace />;
+  }
+
+  // ✅ Authorized
+  return children;
 }

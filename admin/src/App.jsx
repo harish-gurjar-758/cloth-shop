@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import Dashboard from "./pages/Dashboard";
 import AdminProducts from "./pages/Products";
 import AdminOrders from "./pages/Orders";
@@ -7,19 +8,26 @@ import Analytics from "./pages/Analytics";
 import AdminSettings from "./pages/Settings";
 import AdminLayout from "./components/AdminLayout";
 import AdminRoute from "./components/AdminRoute";
+import PublicRoute from "./components/PublicRoute";
 import AdminLogin from "./pages/Auth";
 import NotFound from "./pages/NotFound";
-
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* ================= AUTH ROUTE ================= */}
-        <Route path="/login" element={<AdminLogin />} />
+        {/* ================= LOGIN ================= */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <AdminLogin />
+            </PublicRoute>
+          }
+        />
 
-        {/* ================= ADMIN PROTECTED ROUTES ================= */}
+        {/* ================= PROTECTED ADMIN ================= */}
         <Route
           path="/"
           element={
@@ -28,8 +36,7 @@ function App() {
             </AdminRoute>
           }
         >
-          {/* Nested Routes */}
-          <Route index element={<Navigate to="/dashboard" />} />
+          <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="orders" element={<AdminOrders />} />
