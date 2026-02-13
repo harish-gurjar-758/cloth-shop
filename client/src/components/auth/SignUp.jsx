@@ -7,11 +7,13 @@ import {
     Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { registerApi } from "../../Apis/Apis";
+
 
 export default function SignUp({ switchMode }) {
     const navigate = useNavigate();
 
-    const [form, setForm] = useState({
+    const [userData, setUserData] = useState({
         name: "",
         email: "",
         password: "",
@@ -24,13 +26,18 @@ export default function SignUp({ switchMode }) {
     });
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        setUserData({
+            ...userData,
+            [e.target.name]: e.target.value,
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!form.name || !form.email || !form.password) {
+        const { name, email, password } = userData;
+
+        if (!name || !email || !password) {
             return setAlert({
                 open: true,
                 message: "All fields are required!",
@@ -39,22 +46,30 @@ export default function SignUp({ switchMode }) {
         }
 
         try {
-            await registerUser(form);
+            const res = await registerApi(userData);
 
-            setAlert({
-                open: true,
-                message: "Account Created Successfully 🎉",
-                severity: "success",
-            });
+            // ✅ Use res properly
+            if (res.data.success) {
+                setAlert({
+                    open: true,
+                    message: res.data.message || "Account Created Successfully 🎉",
+                    severity: "success",
+                });
 
-            setTimeout(() => {
-                navigate("/profile");
-            }, 1500);
+                console.log("User:", res.data.user);
+                console.log("Token:", res.data.token); // if backend sends it
+
+                setTimeout(() => {
+                    navigate("/profile");
+                }, 1500);
+            }
 
         } catch (error) {
             setAlert({
                 open: true,
-                message: error,
+                message:
+                    error.response?.data?.message ||
+                    "Registration failed",
                 severity: "error",
             });
         }
