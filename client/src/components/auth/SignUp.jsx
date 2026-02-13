@@ -27,7 +27,7 @@ export default function SignUp({ switchMode }) {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!form.name || !form.email || !form.password) {
@@ -38,16 +38,26 @@ export default function SignUp({ switchMode }) {
             });
         }
 
-        // Fake register logic
-        setAlert({
-            open: true,
-            message: "Account Created Successfully 🎉",
-            severity: "success",
-        });
+        try {
+            await registerUser(form);
 
-        setTimeout(() => {
-            navigate("/profile"); // REDIRECT AFTER SIGNUP
-        }, 1500);
+            setAlert({
+                open: true,
+                message: "Account Created Successfully 🎉",
+                severity: "success",
+            });
+
+            setTimeout(() => {
+                navigate("/profile");
+            }, 1500);
+
+        } catch (error) {
+            setAlert({
+                open: true,
+                message: error,
+                severity: "error",
+            });
+        }
     };
 
     return (

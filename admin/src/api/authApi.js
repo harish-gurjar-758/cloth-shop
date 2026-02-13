@@ -1,13 +1,56 @@
 import API from "./axios";
 
-export const registerUser = (data) =>
-    API.post("/auth/register", data);
 
-export const loginUser = (data) =>
-    API.post("/auth/login", data);
+// ================= REGISTER =================
+export const registerUser = async (data) => {
+    try {
+        const res = await API.post("/auth/register", data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-export const logoutUser = () =>
-    API.post("/auth/logout");
 
-export const getProfile = () =>
-    API.get("/users/profile");
+// ================= LOGIN =================
+export const loginUser = async (data) => {
+    try {
+        const res = await API.post("/auth/login", data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+// ================= LOGOUT =================
+export const logoutUser = async () => {
+    try {
+        const res = await API.post("/auth/logout");
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+// ================= CHECK AUTH =================
+export const checkAuth = async () => {
+    try {
+        const res = await API.get("/auth/check");
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+// ================= GET PROFILE =================
+export const getProfile = async () => {
+    try {
+        const res = await API.get("/users/profile");
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
