@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
-import { generateToken } from "../utils/generateToken.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 // ================= REGISTER =================
 export const registerUser = async (req, res) => {
@@ -15,27 +16,33 @@ export const registerUser = async (req, res) => {
         const userExists = await User.findOne({ email: normalizedEmail });
 
         if (userExists) {
-            return res.status(400).json({ success: false, message: "User already exists" });
+            return res.status(400).json({
+                success: false,
+                message: "User already exists"
+            });
         }
 
-        const user = await User.create({
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = await User.create({
             name,
             email: normalizedEmail,
-            password,
+            password: hashedPassword,
         });
 
-        generateToken(res, user._id);
+        await newUser.save();
 
         res.status(201).json({
             success: true,
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
+            message: "Registration successful.",
+            user: newUser,
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({
+            success: false,
+            message: error.message || "Internal Server Error",
+        });
     }
 };
 
@@ -49,72 +56,71 @@ export const loginUser = async (req, res) => {
         const user = await User.findOne({ email: normalizedEmail });
 
         if (!user) {
-            return res.status(401).json({ success: false, message: "Invalid credentials" });
+            return res.status(401).json({
+                success: false,
+                message: "Invalid credentials"
+            });
         }
 
         if (user.isBlocked) {
-            return res.status(403).json({ success: false, message: "Account is blocked by admin" });
+            return res.status(403).json({
+                success: false,
+                message: "Account is blocked by admin"
+            });
         }
 
-        const isMatch = await user.matchPassword(password);
+        const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return res.status(401).json({ success: false, message: "Invalid credentials" });
+            return res.status(401).json({
+                success: false,
+                message: "Invalid credentials"
+            });
         }
 
-        generateToken(res, user._id);
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
 
-        res.json({
+        res.status(200).json({
             success: true,
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
+            message: "Login Successful",
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+            },
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({
+            success: false,
+            message: error.message || "server error during Login",
+        });
     }
-};
-
-// ================= LOGOUT =================
-export const logoutUser = (req, res) => {
-    res.cookie("token", "", {
-        httpOnly: true,
-        expires: new Date(0),
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-    });
-
-    res.json({ success: true, message: "Logged out successfully" });
 };
 
 // ================= CHECK ME =================
 export const checkMe = async (req, res) => {
     try {
-        const token = req.cookies.token;
-
-        if (!token) {
-            return res.status(401).json({ success: false, message: "Not authenticated" });
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: "Not authenticated",
+            });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        const user = await User.findById(decoded.id).select("-password");
-
-        if (!user) {
-            return res.status(401).json({ success: false, message: "User not found" });
-        }
-
-        res.json({
+        res.status(200).json({
             success: true,
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-        });
-
+            user: req.user,
+        })
     } catch (error) {
-        res.status(401).json({ success: false, message: "Invalid token" });
+        res.status(500).json({
+            success: false,
+            message: "Invalid token"
+        });
     }
 };

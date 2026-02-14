@@ -47,33 +47,27 @@ export default function SignUp({ switchMode }) {
         }
 
         try {
-            const res = await registerApi(userData);
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('password', password);
 
-            if (res.success) {
+            const res = await registerApi(formData);
+
+            if (res.success && res.token) {
+                localStorage.setItem('token', res.token);
+                localStorage.setItem('uer', JSON.stringify(res.user));
                 setAlert({
                     open: true,
-                    message: "Account Created Successfully 🎉",
+                    message: res.message || "Registered successfully!",
                     severity: "success",
                 });
-
-                // Clear form
-                setUserData({
-                    name: "",
-                    email: "",
-                    password: "",
-                });
-
-                // Redirect to profile after short delay
-                setTimeout(() => {
-                    navigate("/profile");
-                }, 1500);
-
             } else {
                 setAlert({
                     open: true,
-                    message: res.message || "Registration failed",
+                    message: res.message || "Registered failed!",
                     severity: "error",
-                });
+                })
             }
 
         } catch (error) {

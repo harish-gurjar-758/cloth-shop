@@ -2,12 +2,15 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+
+// Custom modules
 import connectDB from "./src/config/db.js";
 import authRoutes from "./src/routes/auth.routes.js";
 
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 10000;
 
 // 🔗 Connect Database
 connectDB();
@@ -18,7 +21,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "*",
     credentials: true,
   })
 );
@@ -27,8 +30,6 @@ app.use(
 app.use("/api/auth", authRoutes);
 
 // 🚀 Server Start
-const PORT = process.env.PORT || 10000;
-
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running at: http://localhost:${PORT}`);
 });
