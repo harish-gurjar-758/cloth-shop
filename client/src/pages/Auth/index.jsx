@@ -13,7 +13,7 @@ export default function Auth() {
                 className="w-full max-w-5xl rounded-3xl overflow-hidden flex"
             >
                 {/* LEFT DESIGN PANEL */}
-                <Box className="hidden md:flex w-1/2 bg-black text-white items-center justify-center p-10 flex-col">
+                <Box className="hidden md:flex w-1/2 bg-pink-600 text-white items-center justify-center p-10 flex-col">
                     <h2 className="text-3xl font-bold mb-4">
                         {isLogin ? "Welcome Back 👋" : "Join Our Fashion World 👗"}
                     </h2>
