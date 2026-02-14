@@ -9,7 +9,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { registerApi } from "../../Apis/Apis";
 
-
 export default function SignUp({ switchMode }) {
     const navigate = useNavigate();
 
@@ -25,6 +24,7 @@ export default function SignUp({ switchMode }) {
         severity: "success",
     });
 
+    // Handle Input Change
     const handleChange = (e) => {
         setUserData({
             ...userData,
@@ -32,7 +32,7 @@ export default function SignUp({ switchMode }) {
         });
     };
 
-    // ------
+    // Handle Submit
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -49,16 +49,25 @@ export default function SignUp({ switchMode }) {
         try {
             const res = await registerApi(userData);
 
-            if (res && res._id) {
+            if (res.success) {
                 setAlert({
                     open: true,
                     message: "Account Created Successfully 🎉",
                     severity: "success",
                 });
 
+                // Clear form
+                setUserData({
+                    name: "",
+                    email: "",
+                    password: "",
+                });
+
+                // Redirect to profile after short delay
                 setTimeout(() => {
                     navigate("/profile");
                 }, 1500);
+
             } else {
                 setAlert({
                     open: true,
@@ -70,7 +79,9 @@ export default function SignUp({ switchMode }) {
         } catch (error) {
             setAlert({
                 open: true,
-                message: "Registration failed",
+                message:
+                    error.response?.data?.message ||
+                    "Registration failed. Try again.",
                 severity: "error",
             });
         }
@@ -87,19 +98,25 @@ export default function SignUp({ switchMode }) {
                     label="Full Name"
                     name="name"
                     fullWidth
+                    value={userData.name}
                     onChange={handleChange}
                 />
+
                 <TextField
                     label="Email"
                     name="email"
+                    type="email"
                     fullWidth
+                    value={userData.email}
                     onChange={handleChange}
                 />
+
                 <TextField
                     label="Password"
                     name="password"
                     type="password"
                     fullWidth
+                    value={userData.password}
                     onChange={handleChange}
                 />
 
@@ -123,7 +140,9 @@ export default function SignUp({ switchMode }) {
                 autoHideDuration={3000}
                 onClose={() => setAlert({ ...alert, open: false })}
             >
-                <Alert severity={alert.severity}>{alert.message}</Alert>
+                <Alert severity={alert.severity} sx={{ width: "100%" }}>
+                    {alert.message}
+                </Alert>
             </Snackbar>
         </>
     );

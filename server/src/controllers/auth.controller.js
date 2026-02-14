@@ -1,14 +1,13 @@
 import User from "../models/user.model.js";
 import { generateToken } from "../utils/generateToken.js";
 
-
 // ================= REGISTER =================
 export const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
         if (!name || !email || !password) {
-            return res.status(400).json({ message: "All fields are required" });
+            return res.status(400).json({ success: false, message: "All fields are required" });
         }
 
         const normalizedEmail = email.toLowerCase();
@@ -16,7 +15,7 @@ export const registerUser = async (req, res) => {
         const userExists = await User.findOne({ email: normalizedEmail });
 
         if (userExists) {
-            return res.status(400).json({ message: "User already exists" });
+            return res.status(400).json({ success: false, message: "User already exists" });
         }
 
         const user = await User.create({
@@ -28,6 +27,7 @@ export const registerUser = async (req, res) => {
         generateToken(res, user._id);
 
         res.status(201).json({
+            success: true,
             _id: user._id,
             name: user.name,
             email: user.email,
@@ -35,13 +35,9 @@ export const registerUser = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
-        console.error(error.message);
-
+        res.status(500).json({ success: false, message: error.message });
     }
 };
-
-
 
 // ================= LOGIN =================
 export const loginUser = async (req, res) => {
@@ -53,23 +49,23 @@ export const loginUser = async (req, res) => {
         const user = await User.findOne({ email: normalizedEmail });
 
         if (!user) {
-            return res.status(401).json({ message: "Invalid credentials" });
+            return res.status(401).json({ success: false, message: "Invalid credentials" });
         }
 
-        // 🚫 Check if blocked
         if (user.isBlocked) {
-            return res.status(403).json({ message: "Account is blocked by admin" });
+            return res.status(403).json({ success: false, message: "Account is blocked by admin" });
         }
 
         const isMatch = await user.matchPassword(password);
 
         if (!isMatch) {
-            return res.status(401).json({ message: "Invalid credentials" });
+            return res.status(401).json({ success: false, message: "Invalid credentials" });
         }
 
         generateToken(res, user._id);
 
         res.json({
+            success: true,
             _id: user._id,
             name: user.name,
             email: user.email,
@@ -77,11 +73,9 @@ export const loginUser = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
-
-
 
 // ================= LOGOUT =================
 export const logoutUser = (req, res) => {
@@ -92,36 +86,35 @@ export const logoutUser = (req, res) => {
         sameSite: "strict",
     });
 
-    res.json({ message: "Logged out successfully" });
+    res.json({ success: true, message: "Logged out successfully" });
 };
 
-
-
-// ================= BLOCK / UNBLOCK USER (ADMIN) =================
-export const toggleBlockUser = async (req, res) => {
+// ================= CHECK ME =================
+export const checkMe = async (req, res) => {
     try {
-        const { id } = req.params;
+        const token = req.cookies.token;
 
-        const user = await User.findById(id);
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Not authenticated" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const user = await User.findById(decoded.id).select("-password");
 
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(401).json({ success: false, message: "User not found" });
         }
-
-        // Prevent admin blocking themselves
-        if (req.user._id.toString() === id) {
-            return res.status(400).json({ message: "You cannot block yourself" });
-        }
-
-        user.isBlocked = !user.isBlocked;
-        await user.save();
 
         res.json({
-            message: `User ${user.isBlocked ? "blocked" : "unblocked"} successfully`,
-            isBlocked: user.isBlocked,
+            success: true,
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
         });
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(401).json({ success: false, message: "Invalid token" });
     }
 };

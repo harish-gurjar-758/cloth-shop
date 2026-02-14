@@ -4,7 +4,7 @@ const MAIN_API = "http://localhost:10000/api";
 
 const API = axios.create({
     baseURL: MAIN_API,
-    withCredentials: true, // VERY IMPORTANT
+    withCredentials: true,
 });
 
 // REGISTER
