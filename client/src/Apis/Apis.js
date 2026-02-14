@@ -2,56 +2,58 @@ import axios from "axios";
 
 const MAIN_API = "http://localhost:10000/api";
 
-const API = axios.create({
-    baseURL: MAIN_API,
-    withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-});
-
-API.interceptors.request.use((config) => {
-    const token = localStorage.getItem("token");
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-    return config;
-});
-
-
-// -------
-//  user Register
-// --------
-
 // REGISTER
 export const registerApi = async (data) => {
     try {
-        const response = await axios.post(`${MAIN_API}/auth/register`, data);
+        const response = await axios.post(
+            `${MAIN_API}/auth/register`,
+            data,
+            { headers: { "Content-Type": "application/json" } }
+        );
         return response.data;
     } catch (error) {
-        console.error("Register Error:", error.response?.data || error.message);
-        return { success: false, message: "Registration failed." };
+        return {
+            success: false,
+            message: error.response?.data?.message || "Registration failed.",
+        };
     }
 };
 
-// Login
+// LOGIN
 export const signInApi = async (credentials) => {
     try {
-        const response = await axios.post(`${MAIN_API}/auth/login`, credentials);
+        const response = await axios.post(
+            `${MAIN_API}/auth/login`,
+            credentials,
+            { headers: { "Content-Type": "application/json" } }
+        );
         return response.data;
     } catch (error) {
-        console.error("Login Error:", error.response?.data || error.message);
-        return { success: false, message: "Login failed." };
+        return {
+            success: false,
+            message: error.response?.data?.message || "Login failed.",
+        };
     }
 };
 
-// Auth Check
+// CHECK AUTH
 export const checkAuthApi = async () => {
     try {
         const token = localStorage.getItem("token");
-        if (!token) throw new Error("Token not found");
-        const response = await axios.get(`${MAIN_API}/auth/me`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
+
+        const response = await axios.get(
+            `${MAIN_API}/auth/me`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+
         return response.data;
+
     } catch (error) {
-        console.error("Auth Check Error:", error.response?.data || error.message);
-        return { success: false, message: "Authentication failed." };
+        return {
+            success: false,
+            message: error.response?.data?.message || "Authentication failed.",
+        };
     }
 };

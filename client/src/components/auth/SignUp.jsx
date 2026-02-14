@@ -46,36 +46,23 @@ export default function SignUp({ switchMode }) {
             });
         }
 
-        try {
-            const formData = new FormData();
-            formData.append('name', name);
-            formData.append('email', email);
-            formData.append('password', password);
+        const res = await registerApi({ name, email, password });
 
-            const res = await registerApi(formData);
+        if (res.success) {
+            localStorage.setItem("token", res.token);
+            localStorage.setItem("user", JSON.stringify(res.user));
 
-            if (res.success && res.token) {
-                localStorage.setItem('token', res.token);
-                localStorage.setItem('uer', JSON.stringify(res.user));
-                setAlert({
-                    open: true,
-                    message: res.message || "Registered successfully!",
-                    severity: "success",
-                });
-            } else {
-                setAlert({
-                    open: true,
-                    message: res.message || "Registered failed!",
-                    severity: "error",
-                })
-            }
-
-        } catch (error) {
             setAlert({
                 open: true,
-                message:
-                    error.response?.data?.message ||
-                    "Registration failed. Try again.",
+                message: res.message,
+                severity: "success",
+            });
+
+            navigate("/profile");
+        } else {
+            setAlert({
+                open: true,
+                message: res.message,
                 severity: "error",
             });
         }
