@@ -13,4 +13,5 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.put("/users/:id/block", protect, adminOnly, toggleBlockUser);
+router.get("/me")
 export default router;

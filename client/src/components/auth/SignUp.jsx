@@ -32,6 +32,7 @@ export default function SignUp({ switchMode }) {
         });
     };
 
+    // ------
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -48,28 +49,28 @@ export default function SignUp({ switchMode }) {
         try {
             const res = await registerApi(userData);
 
-            // ✅ Use res properly
-            if (res.data.success) {
+            if (res && res._id) {
                 setAlert({
                     open: true,
-                    message: res.data.message || "Account Created Successfully 🎉",
+                    message: "Account Created Successfully 🎉",
                     severity: "success",
                 });
-
-                console.log("User:", res.data.user);
-                console.log("Token:", res.data.token); // if backend sends it
 
                 setTimeout(() => {
                     navigate("/profile");
                 }, 1500);
+            } else {
+                setAlert({
+                    open: true,
+                    message: res.message || "Registration failed",
+                    severity: "error",
+                });
             }
 
         } catch (error) {
             setAlert({
                 open: true,
-                message:
-                    error.response?.data?.message ||
-                    "Registration failed",
+                message: "Registration failed",
                 severity: "error",
             });
         }
