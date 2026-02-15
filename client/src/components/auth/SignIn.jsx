@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
     TextField,
     Button,
@@ -7,11 +7,11 @@ import {
     Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 export default function SignIn({ switchMode }) {
     const navigate = useNavigate();
-    const { setUser } = useContext(AuthContext);
+    const { login } = useAuth();
 
     const [form, setForm] = useState({
         email: "",
@@ -31,10 +31,9 @@ export default function SignIn({ switchMode }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            const { data } = await loginUser(form);
-            setUser(data);
+        const res = await login(form);
 
+        if (res.success) {
             setAlert({
                 open: true,
                 message: "Login Successful 🎉",
@@ -42,10 +41,10 @@ export default function SignIn({ switchMode }) {
             });
 
             setTimeout(() => navigate("/profile"), 1000);
-        } catch (error) {
+        } else {
             setAlert({
                 open: true,
-                message: error.response?.data?.message || "Login Failed",
+                message: res.message || "Login Failed",
                 severity: "error",
             });
         }
@@ -64,6 +63,7 @@ export default function SignIn({ switchMode }) {
                     fullWidth
                     onChange={handleChange}
                 />
+
                 <TextField
                     label="Password"
                     name="password"
